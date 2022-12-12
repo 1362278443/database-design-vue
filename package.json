@@ -9,9 +9,13 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@element-plus/icons-vue": "^2.0.4",
+    "@fast-crud/fast-crud": "*",
+    "@fast-crud/ui-element": "^1.6.1",
     "@types/node": "^18.11.12",
     "axios": "^1.2.1",
     "element-plus": "^2.2.26",
+    "mockjs": "^1.1.0",
     "nprogress": "^0.2.0",
     "unplugin-auto-import": "^0.12.0",
     "unplugin-vue-components": "^0.22.11",
