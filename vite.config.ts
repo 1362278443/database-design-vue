@@ -1,38 +1,65 @@
+import path from 'path'
 import { defineConfig } from 'vite'
 import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
-import { resolve } from 'path'
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
+import Icons from 'unplugin-icons/vite'
+import IconsResolver from 'unplugin-icons/resolver'
 import vue from '@vitejs/plugin-vue'
+
+const pathSrc = path.resolve(__dirname, 'src')
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  // 别名设置
+  resolve: {
+    alias: {
+      '@': pathSrc,
+    },
+  },
   plugins: [
     vue({
       reactivityTransform: true,
     }),
     AutoImport({
-      resolvers: [ElementPlusResolver()],
+      // Auto import functions from Vue, e.g. ref, reactive, toRef...
+      // 自动导入 Vue 相关函数，如：ref, reactive, toRef 等
       imports: ['vue'],
-      // eslint 报错解决：'ref' is not defined
-      eslintrc: {
-        // 默认 false, true 启用生成。生成一次就可以，避免每次工程启动都生成，一旦生成配置文件之后，最好把 enable 关掉，即改成 false。
-        // 否则这个文件每次会在重新加载的时候重新生成，这会导致 eslint 有时会找不到这个文件。当需要更新配置文件的时候，再重新打开
-        enabled: false,
-        // filepath: './.eslintrc-auto-import.json', // 默认就是 ./.eslintrc-auto-import.json
-        // globalsPropValue: true, // 默认 true
-      },
+
+      // Auto import functions from Element Plus, e.g. ElMessage, ElMessageBox... (with style)
+      // 自动导入 Element Plus 相关函数，如：ElMessage, ElMessageBox... (带样式)
+      resolvers: [
+        ElementPlusResolver(),
+
+        // Auto import icon components
+        // 自动导入图标组件
+        IconsResolver({
+          prefix: 'Icon',
+        }),
+      ],
+
+      dts: path.resolve(pathSrc, 'auto-imports.d.ts'),
     }),
+
     Components({
-      resolvers: [ElementPlusResolver()],
+      resolvers: [
+        // Auto register icon components
+        // 自动注册图标组件
+        IconsResolver({
+          enabledCollections: ['ep'],
+        }),
+        // Auto register Element Plus components
+        // 自动导入 Element Plus 组件
+        ElementPlusResolver(),
+      ],
+
+      dts: path.resolve(pathSrc, 'components.d.ts'),
+    }),
+
+    Icons({
+      autoInstall: true,
     }),
   ],
-  // 别名设置
-  resolve: {
-    alias: {
-      '@': resolve(__dirname, './src'), // 把 @ 指向到 src 目录去
-    },
-  },
   // 服务设置
   server: {
     host: true, // host设置为true才可以使用network的形式，以ip访问项目
@@ -47,6 +74,16 @@ export default defineConfig({
         target: 'http://localhost:8888/',
         changeOrigin: true, // 允许跨域
         rewrite: (path) => path.replace('/api/', '/'),
+      },
+    },
+  },
+  css: {
+    // css预处理器
+    preprocessorOptions: {
+      scss: {
+        // 两种方式都可以
+        // additionalData: '@import "@/assets/scss/global.scss";',
+        // additionalData: '@use "@/assets/scss/global.scss" as *;'
       },
     },
   },

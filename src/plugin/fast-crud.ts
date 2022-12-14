@@ -1,10 +1,10 @@
 import { request } from '@/api/service'
+import ui from '@fast-crud/ui-element'
 import { FastCrud } from '@fast-crud/fast-crud'
 import '@fast-crud/fast-crud/dist/style.css'
-import UiElement from '@fast-crud/ui-element'
 
 function install(app) {
-  app.use(UiElement)
+  app.use(ui)
   app.use(FastCrud, {
     async dictRequest({ url }) {
       return await request({ url, method: 'post' })

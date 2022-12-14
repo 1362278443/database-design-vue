@@ -1,5 +1,5 @@
 <template>
-  <router-link to="/test">aaa</router-link>
+  <div>aaa</div>
 </template>
 
 <script lang="ts"></script>

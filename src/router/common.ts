@@ -2,24 +2,24 @@
 import { RouteRecordRaw } from 'vue-router'
 
 const commonRoutes: Array<RouteRecordRaw> = [
-  //首页
   {
+    //首页
+
+    name: 'framework',
     path: '/',
-    name: 'home',
-    meta: {
-      title: 'home',
-      icon: '',
-    },
-    component: () => import('@/views/home.vue'),
-  },
-  {
-    path: '/test',
-    name: 'test',
-    meta: {
-      title: '',
-      icon: '',
-    },
-    component: () => import('@/views/crud/test/index.vue'),
+    redirect: '/home',
+    component: () => import('@/layout/index.vue'),
+    meta: { title: '图书管理系统' },
+    children: [
+      {
+        name: 'home',
+        path: 'home',
+        component: () => import('@/views/home.vue'),
+        meta: {
+          title: '首页',
+        },
+      },
+    ],
   },
 ]
 

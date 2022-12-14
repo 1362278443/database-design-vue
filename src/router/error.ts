@@ -4,6 +4,7 @@ const exceptionRoutes: Array<RouteRecordRaw> = [
   {
     path: '/404',
     name: '404',
+    hideMenu: true,
     meta: {
       title: '非常抱歉,页面走丢了',
     },
@@ -13,6 +14,7 @@ const exceptionRoutes: Array<RouteRecordRaw> = [
     path: '/:pathMatch(.*)',
     meta: {},
     redirect: '/404',
+    hideMenu: true,
   },
 ]
 
