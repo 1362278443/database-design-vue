@@ -5,13 +5,11 @@ const studentRoutes: Array<RouteRecordRaw> = [
   {
     //学生管理
     path: '/student',
-    redirect: '/info',
     component: () => import('@/layout/index.vue'),
     meta: { title: '学生管理' },
     children: [
       {
-        name: 'info',
-        path: 'info',
+        path: '',
         component: () => import('@/views/crud/students/index.vue'),
         meta: { title: '学生管理' },
       },

@@ -15,6 +15,10 @@ function install(app) {
      */
     commonOptions(context: any = {}) {
       const opts = {
+        //设置为卡片布局
+        container: {
+          is: 'fs-layout-card',
+        },
         table: {
           size: 'default',
           pagination: false,

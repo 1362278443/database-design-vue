@@ -1,6 +1,5 @@
 // crud.js
 import * as api from './api'
-import { dict } from '@fast-crud/fast-crud'
 
 // 构建crudOptions的方法
 export default function ({ expose }) {
@@ -28,23 +27,38 @@ export default function ({ expose }) {
       },
       columns: {
         // 字段配置
-        radio: {
-          title: '状态', //字段名称
+        id: {
+          title: '编号', //字段名称
           search: { show: true }, // 搜索配置
-          type: 'dict-radio', // 字段类型
-          dict: dict({
-            //数据字典配置
-            url: '/dicts/OpenStatusEnum',
-          }),
+          type: 'number', // 字段类型
         },
-        text: {
-          title: '测试',
+        name: {
+          title: '书名',
           search: { show: true },
           type: 'text',
         },
-        // 你可以尝试在此处增加更多字段
+        time: {
+          title: '出版日期',
+          type: 'date',
+          search: {
+            show: true,
+            component: {
+              name: 'el-date-picker',
+              type: 'year',
+            },
+          },
+        },
+        pub: {
+          title: '出版社',
+          search: { show: true },
+          type: 'text',
+        },
+        locate: {
+          title: '位置',
+          search: { show: true },
+          type: 'text',
+        },
       },
-      // 其他crud配置
     },
   }
 }

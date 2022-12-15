@@ -1,5 +1,5 @@
 <template>
-  <fs-page>
+  <fs-page class="page-layout-card">
     <fs-crud ref="crudRef" v-bind="crudBinding" />
   </fs-page>
 </template>
@@ -10,7 +10,7 @@ import createCrudOptions from './crud'
 import { useExpose, useCrud } from '@fast-crud/fast-crud'
 
 export default defineComponent({
-  name: 'MyFirstCrud', // 实际开发中可以修改一下name
+  name: 'book', // 实际开发中可以修改一下name
   setup() {
     // crud组件的ref
     const crudRef = ref()
@@ -36,3 +36,9 @@ export default defineComponent({
   },
 })
 </script>
+
+<style lang="scss">
+.page-layout-card {
+  background-color: #eee;
+}
+</style>

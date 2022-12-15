@@ -5,13 +5,12 @@ const bookRoutes: Array<RouteRecordRaw> = [
   {
     //图书管理
     path: '/book',
-    redirect: '/info',
+    // redirect: '/book/info',
     component: () => import('@/layout/index.vue'),
     meta: { title: '书籍管理' },
     children: [
       {
-        name: 'info',
-        path: 'info',
+        path: '',
         component: () => import('@/views/crud/books/index.vue'),
         meta: { title: '书籍管理' },
       },

@@ -26,6 +26,7 @@ function createService() {
       const dataAxios = response.data
       // 这个状态码是和后端约定的
       const { code } = dataAxios
+      console.log(dataAxios)
       // 根据 code 进行判断
       if (code === undefined) {
         // 如果没有 code 代表这不是项目后端开发的接口 比如可能是 D2Admin 请求最新版本
@@ -34,7 +35,7 @@ function createService() {
       } else {
         // 有 code 代表这是一个后端接口 可以进行进一步的判断
         switch (code) {
-          case 0:
+          case 41:
             // [ 示例 ] code === 0 代表没有错误
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
@@ -107,7 +108,7 @@ function createRequestFunction(service: AxiosInstance) {
         'Content-Type': get(config, 'headers.Content-Type', 'application/json'),
       },
       timeout: 5000,
-      baseURL: 'http://www.docmirror.cn:7001/api',
+      baseURL: '/api',
       data: {},
     }
     return service(Object.assign(configDefault, config))
