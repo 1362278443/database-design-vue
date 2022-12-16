@@ -1,5 +1,6 @@
 // crud.js
 import * as api from './api'
+import { ref } from 'vue'
 
 // 构建crudOptions的方法
 export default function ({ expose }) {
@@ -16,7 +17,14 @@ export default function ({ expose }) {
   const addRequest = async ({ form }) => {
     return await api.AddObj(form)
   }
+  const selectedIds = ref([])
+
+  const onSelectionChange = (changed) => {
+    console.log('selection', changed)
+    selectedIds.value = changed.map((item) => item.id)
+  }
   return {
+    selectedIds, //返回给index.vue去使用
     crudOptions: {
       //请求配置
       request: {
@@ -25,17 +33,42 @@ export default function ({ expose }) {
         editRequest, // 修改请求
         delRequest, // 删除请求
       },
+      table: {
+        rowKey: 'id', //设置你的主键id， 默认rowKey=id
+        onSelectionChange,
+      },
       columns: {
         // 字段配置
+        // 选择列
+        $checked: {
+          title: '选择',
+          form: { show: false },
+          column: {
+            type: 'selection',
+            align: 'center',
+            width: '55px',
+            columnSetDisabled: true, //禁止在列设置中选择
+          },
+        },
         id: {
-          title: '编号', //字段名称
-          search: { show: true }, // 搜索配置
-          type: 'number', // 字段类型
+          title: 'ID',
+          key: 'id',
+          type: 'number',
+          search: { show: true },
+          column: {
+            width: 80,
+          },
+          form: {
+            show: false,
+          },
         },
         name: {
           title: '书名',
-          search: { show: true },
           type: 'text',
+          search: { show: true },
+          form: {
+            rules: [{ required: true }],
+          },
         },
         time: {
           title: '出版日期',
@@ -45,18 +78,28 @@ export default function ({ expose }) {
             component: {
               name: 'el-date-picker',
               type: 'year',
+              'value-format': 'YYYY',
             },
+          },
+          form: {
+            rules: [{ required: true }],
           },
         },
         pub: {
           title: '出版社',
-          search: { show: true },
           type: 'text',
+          search: { show: true },
+          form: {
+            rules: [{ required: true }],
+          },
         },
         locate: {
           title: '位置',
-          search: { show: true },
           type: 'text',
+          search: { show: true },
+          form: {
+            rules: [{ required: true }],
+          },
         },
       },
     },

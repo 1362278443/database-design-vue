@@ -1,0 +1,71 @@
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+div#app {
+  height: 100%;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin-bottom: 0;
+}
+
+.el-input__prefix-inner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.router-link-active {
+  text-decoration: none;
+}
+a {
+  text-decoration: none;
+}
+
+//过度动画
+//.v-enter-from,
+//.v-leave-to {
+//  opacity: 0;
+//}
+//
+//.v-leave-from,
+//.v-enter-to {
+//  opacity: 1;
+//}
+// 过渡动画 横向渐变
+.fade-transverse-leave-active,
+.fade-transverse-enter-active {
+  transition: all 0.5s;
+}
+.fade-transverse-enter-from {
+  opacity: 0;
+  transform: translateX(-30px);
+}
+.fade-transverse-leave-to {
+  opacity: 0;
+  transform: translateX(30px);
+}
+
+// 过渡动画 缩放渐变
+.fade-scale-leave-active,
+.fade-scale-enter-active {
+  transition: all 0.3s;
+}
+.fade-scale-enter {
+  opacity: 0;
+  transform: scale(1.2);
+}
+.fade-scale-leave-to {
+  opacity: 0;
+  transform: scale(0.8);
+}

@@ -1,6 +1,6 @@
 // crud.js
 import * as api from './api'
-import { dict } from '@fast-crud/fast-crud'
+import { ref } from 'vue'
 
 // 构建crudOptions的方法
 export default function ({ expose }) {
@@ -17,7 +17,14 @@ export default function ({ expose }) {
   const addRequest = async ({ form }) => {
     return await api.AddObj(form)
   }
+  const selectedIds = ref([])
+
+  const onSelectionChange = (changed) => {
+    console.log('selection', changed)
+    selectedIds.value = changed.map((item) => item.id)
+  }
   return {
+    selectedIds, //返回给index.vue去使用
     crudOptions: {
       //请求配置
       request: {
@@ -26,25 +33,76 @@ export default function ({ expose }) {
         editRequest, // 修改请求
         delRequest, // 删除请求
       },
+      table: {
+        rowKey: 'sno', //设置你的主键id， 默认rowKey=id
+        onSelectionChange,
+      },
       columns: {
         // 字段配置
-        radio: {
-          title: '状态', //字段名称
-          search: { show: true }, // 搜索配置
-          type: 'dict-radio', // 字段类型
-          dict: dict({
-            //数据字典配置
-            url: '/dicts/OpenStatusEnum',
-          }),
+        // 选择列
+        $checked: {
+          title: '选择',
+          form: { show: false },
+          column: {
+            type: 'selection',
+            align: 'center',
+            width: '55px',
+            columnSetDisabled: true, //禁止在列设置中选择
+          },
         },
-        text: {
-          title: '测试',
-          search: { show: true },
+        sno: {
+          title: '借书证号',
+          key: 'sno',
           type: 'text',
+          search: { show: true },
+          addForm: {
+            rules: [
+              { required: true },
+              { pattern: /^[0-9]+$/, message: '输入必须为数字' },
+              { len: 10, message: '长度需为10位' },
+              {
+                //向后端请求判断是否有该学生
+                async validator(rule, value, callback, source, options) {
+                  const errors = []
+                  const res = api.GetObj(value)
+                  if ((await api.GetObj(value)).data == true) {
+                    errors.push(new Error('借书证号重复'))
+                  }
+                  return errors
+                },
+                message: '已有该借书证号的学生存在',
+              },
+            ],
+          },
+          editForm: {
+            show: false,
+          },
         },
-        // 你可以尝试在此处增加更多字段
+        name: {
+          title: '姓名',
+          type: 'text',
+          search: { show: true },
+          form: {
+            rules: [{ required: true }],
+          },
+        },
+        dep: {
+          title: '系别',
+          type: 'text',
+          search: { show: true },
+          form: {
+            rules: [{ required: true }],
+          },
+        },
+        pro: {
+          title: '专业',
+          type: 'text',
+          search: { show: true },
+          form: {
+            rules: [{ required: true }],
+          },
+        },
       },
-      // 其他crud配置
     },
   }
 }

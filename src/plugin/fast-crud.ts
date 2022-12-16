@@ -23,14 +23,20 @@ function install(app) {
           size: 'default',
           pagination: false,
         },
+        //工具栏设置
+        toolbar: {
+          buttons: {
+            compact: { show: false },
+          },
+        },
         rowHandle: {
           buttons: {
-            view: { text: null, icon: 'ion:eye-outline', size: 'default' },
-            edit: { text: null, icon: 'ion:create-outline', size: 'default' },
+            view: { text: null, icon: 'View', size: 'default' },
+            edit: { text: null, icon: 'Edit', size: 'default' },
             remove: {
               type: 'danger',
               text: null,
-              icon: 'ion:trash-outline',
+              icon: 'Delete',
               size: 'default',
             },
           },
@@ -47,7 +53,8 @@ function install(app) {
             const currentPage = page.currentPage ?? 1
             const offset = limit * (currentPage - 1)
 
-            sort = sort == null ? {} : sort
+            const order =
+              sort == null ? {} : { orderProp: sort.prop, orderAsc: sort.asc }
 
             return {
               page: {
@@ -55,7 +62,7 @@ function install(app) {
                 offset,
               },
               query: form,
-              sort,
+              order,
             }
           },
           // page请求结果转换

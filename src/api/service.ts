@@ -26,7 +26,6 @@ function createService() {
       const dataAxios = response.data
       // 这个状态码是和后端约定的
       const { code } = dataAxios
-      console.log(dataAxios)
       // 根据 code 进行判断
       if (code === undefined) {
         // 如果没有 code 代表这不是项目后端开发的接口 比如可能是 D2Admin 请求最新版本

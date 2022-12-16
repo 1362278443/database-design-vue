@@ -1,6 +1,12 @@
 <template>
   <fs-page class="page-layout-card">
-    <fs-crud ref="crudRef" v-bind="crudBinding" />
+    <fs-crud ref="crudRef" v-bind="crudBinding">
+      <template #pagination-left>
+        <el-tooltip content="批量删除">
+          <fs-button icon="Delete" @click="handleBatchDelete"></fs-button>
+        </el-tooltip>
+      </template>
+    </fs-crud>
   </fs-page>
 </template>
 
@@ -8,6 +14,7 @@
 import { defineComponent, ref, onMounted } from 'vue'
 import createCrudOptions from './crud'
 import { useExpose, useCrud } from '@fast-crud/fast-crud'
+import { BatchDelete } from './api'
 
 export default defineComponent({
   name: 'book', // 实际开发中可以修改一下name
@@ -19,7 +26,7 @@ export default defineComponent({
     // 暴露的方法
     const { crudExpose } = useExpose({ crudRef, crudBinding })
     // 你的crud配置
-    const { crudOptions } = createCrudOptions({ crudExpose })
+    const { crudOptions, selectedIds } = createCrudOptions({ crudExpose })
     // 初始化crud配置
     // eslint-disable-next-line @typescript-eslint/no-unused-vars,no-unused-vars
     const { resetCrudOptions } = useCrud({ crudExpose, crudOptions })
@@ -29,9 +36,26 @@ export default defineComponent({
     onMounted(() => {
       crudExpose.doRefresh()
     })
+
+    const handleBatchDelete = async () => {
+      if (selectedIds.value?.length > 0) {
+        await ElMessageBox.confirm(
+          `确定要批量删除这${selectedIds.value.length}条记录吗`,
+          '确认'
+        )
+        await BatchDelete(selectedIds.value)
+        ElMessage.info('删除成功')
+        selectedIds.value = []
+        await crudExpose.doRefresh()
+      } else {
+        ElMessage.error('请先勾选记录')
+      }
+    }
+
     return {
       crudBinding,
       crudRef,
+      handleBatchDelete,
     }
   },
 })

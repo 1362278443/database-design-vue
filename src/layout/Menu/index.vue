@@ -18,7 +18,6 @@ export default defineComponent({
   },
   setup() {
     const allRoutes = useRouter().options.routes
-    console.log(allRoutes)
     const route = useRoute()
     const activeMenu: any = computed(() => {
       const { meta, path } = route

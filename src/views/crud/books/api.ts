@@ -8,7 +8,7 @@ const apiPrefix = '/book'
 export function GetList(query: any) {
   return request({
     url: apiPrefix + '/page',
-    method: 'get',
+    method: 'post',
     data: query,
   })
 }
@@ -29,7 +29,7 @@ export function UpdateObj(obj: any) {
   })
 }
 
-export function DelObj(id: any) {
+export function DelObj(id: number) {
   return request({
     url: apiPrefix + '/delete',
     method: 'post',
@@ -37,10 +37,18 @@ export function DelObj(id: any) {
   })
 }
 
-export function GetObj(id: any) {
+export function GetObj(id: number) {
   return request({
     url: apiPrefix + '/info',
     method: 'get',
     params: { id },
+  })
+}
+
+export function BatchDelete(ids: Array<number>) {
+  return request({
+    url: apiPrefix + '/batchDelete',
+    method: 'post',
+    data: { ids },
   })
 }

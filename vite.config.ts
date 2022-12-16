@@ -26,6 +26,13 @@ export default defineConfig({
       // 自动导入 Vue 相关函数，如：ref, reactive, toRef 等
       imports: ['vue'],
 
+      // eslint报错解决
+      eslintrc: {
+        enabled: false, // Default `false`
+        filepath: './.eslintrc-auto-import.json', // Default `./.eslintrc-auto-import.json`
+        globalsPropValue: true, // Default `true`, (true | false | 'readonly' | 'readable' | 'writable' | 'writeable')
+      },
+
       // Auto import functions from Element Plus, e.g. ElMessage, ElMessageBox... (with style)
       // 自动导入 Element Plus 相关函数，如：ElMessage, ElMessageBox... (带样式)
       resolvers: [

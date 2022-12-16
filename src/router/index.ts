@@ -1,5 +1,6 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import NProgress from 'nprogress'
+import 'nprogress/nprogress.css'
 import { routes } from './resolve'
 
 const router = createRouter({
@@ -13,7 +14,7 @@ const router = createRouter({
 router.beforeEach((to, from) => {
   console.log('全局路由前置守卫：to,from\n', to, from)
   // 设置页面标题
-  document.title = to.meta.title as string
+  document.title = ('图书管理系统 | ' + to.meta.title) as string
   if (!NProgress.isStarted()) {
     NProgress.start()
   }
