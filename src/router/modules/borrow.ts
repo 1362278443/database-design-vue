@@ -10,12 +10,12 @@ const borrowRoutes: Array<RouteRecordRaw> = [
     children: [
       {
         path: 'borrow',
-        component: () => import('@/views/crud/borrow/index.vue'),
+        component: () => import('@/views/borrow/index.vue'),
         meta: { title: '借书' },
       },
       {
         path: 'return',
-        component: () => import('@/views/crud/return_book/index.vue'),
+        component: () => import('@/views/return/index.vue'),
         meta: { title: '还书' },
       },
     ],

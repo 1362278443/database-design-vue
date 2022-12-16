@@ -29,26 +29,26 @@ export function UpdateObj(obj: any) {
   })
 }
 
-export function DelObj(id: string) {
+export function DelObj(sno: string) {
   return request({
     url: apiPrefix + '/delete',
     method: 'post',
-    params: { id },
+    params: { sno },
   })
 }
 
-export function GetObj(id: string) {
+export function GetObj(sno: string) {
   return request({
     url: apiPrefix + '/info',
     method: 'get',
-    params: { id },
+    params: { sno },
   })
 }
 
-export function BatchDelete(ids: Array<string>) {
+export function BatchDelete(snos: Array<string>) {
   return request({
     url: apiPrefix + '/batchDelete',
     method: 'post',
-    data: { ids },
+    data: { snos },
   })
 }

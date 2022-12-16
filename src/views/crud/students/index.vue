@@ -44,7 +44,7 @@ export default defineComponent({
           '确认'
         )
         await BatchDelete(selectedIds.value)
-        ElMessage.info('删除成功')
+        ElMessage.success('删除成功')
         selectedIds.value = []
         await crudExpose.doRefresh()
       } else {

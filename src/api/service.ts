@@ -33,20 +33,16 @@ function createService() {
         return dataAxios
       } else {
         // 有 code 代表这是一个后端接口 可以进行进一步的判断
-        switch (code) {
-          case 41:
-            // [ 示例 ] code === 0 代表没有错误
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
-            if (response.config.unpack === false) {
-              //如果不需要解包
-              return dataAxios
-            }
-            return dataAxios.data
-          default:
-            // 不是正确的 code
-            errorCreate(`${dataAxios.msg}: ${response.config.url}`)
+        if (code == 11 || code == 21 || code == 31 || code == 41) {
+          // @ts-ignore
+          if (response.config.unpack === false) {
+            //如果不需要解包
             return dataAxios
+          }
+          return dataAxios.data
+        } else {
+          errorCreate(`${dataAxios.msg}: ${response.config.url}`)
+          return dataAxios
         }
       }
     },

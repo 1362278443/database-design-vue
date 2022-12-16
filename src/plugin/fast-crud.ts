@@ -31,7 +31,7 @@ function install(app) {
         },
         rowHandle: {
           buttons: {
-            view: { text: null, icon: 'View', size: 'default' },
+            view: { show: false, text: null, icon: 'View', size: 'default' },
             edit: { text: null, icon: 'Edit', size: 'default' },
             remove: {
               type: 'danger',
@@ -45,6 +45,7 @@ function install(app) {
               size: 'default',
             },
           },
+          width: 125,
         },
         request: {
           // 查询参数转换
