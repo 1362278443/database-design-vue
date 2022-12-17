@@ -54,7 +54,9 @@ export default function ({ expose }) {
           title: '借书证号',
           key: 'sno',
           type: 'text',
-          search: { show: true },
+          search: {
+            show: true,
+          },
           addForm: {
             rules: [
               { required: true },
@@ -76,6 +78,9 @@ export default function ({ expose }) {
           },
           editForm: {
             show: false,
+          },
+          column: {
+            sortable: 'custom',
           },
         },
         name: {

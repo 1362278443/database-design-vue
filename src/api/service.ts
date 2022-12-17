@@ -33,7 +33,7 @@ function createService() {
         return dataAxios
       } else {
         // 有 code 代表这是一个后端接口 可以进行进一步的判断
-        if (code == 11 || code == 21 || code == 31 || code == 41) {
+        if (code == 11 || code == 21 || code == 31 || code == 41 || code == 0) {
           // @ts-ignore
           if (response.config.unpack === false) {
             //如果不需要解包
@@ -41,7 +41,8 @@ function createService() {
           }
           return dataAxios.data
         } else {
-          errorCreate(`${dataAxios.msg}: ${response.config.url}`)
+          // errorCreate(`${dataAxios.msg}: ${response.config.url}`)
+          errorCreate(`${dataAxios.msg}`)
           return dataAxios
         }
       }

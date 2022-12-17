@@ -56,6 +56,15 @@ function install(app) {
 
             const order =
               sort == null ? {} : { orderProp: sort.prop, orderAsc: sort.asc }
+            // const data = {
+            //   page: {
+            //     limit,
+            //     offset,
+            //   },
+            //   query: form,
+            //   order,
+            // }
+            // console.log(data)
 
             return {
               page: {
