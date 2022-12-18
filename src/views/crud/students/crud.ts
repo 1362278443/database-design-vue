@@ -67,12 +67,12 @@ export default function ({ expose }) {
                 async validator(rule: any, value: any, callback: any) {
                   const errors = []
                   const res = await api.GetObj(value)
-                  if (Boolean(res) == true) {
+                  if (res != null) {
                     callback(new Error('借书证号重复'))
                   }
                   callback()
                 },
-                message: '已有该借书证号的学生存在',
+                message: '借书证号重复',
               },
             ],
           },

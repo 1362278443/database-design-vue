@@ -23,6 +23,24 @@ export default function ({ expose }) {
     console.log('selection', changed)
     selectedIds.value = changed.map((item) => item.id)
   }
+
+  interface rowItem {
+    id: number
+    name: string
+    pub: string
+    borrow_time: number
+    limit_day: number
+  }
+
+  //超期的行标红
+  const tableRowClassName = ({ row }: { row: rowItem }) => {
+    const now = new Date()
+    if (now.getTime() - row.borrow_time > 1000 * 60 * 60 * 24 * row.limit_day) {
+      return 'warning-row'
+    }
+    return ''
+  }
+
   return {
     selectedIds, //返回给index.vue去使用
     crudOptions: {
@@ -36,11 +54,11 @@ export default function ({ expose }) {
       rowHandle: {
         buttons: {
           view: { show: true },
-          edit: { text: false },
+          edit: { show: false },
           remove: {
             type: 'primary',
             title: '归还',
-            icon: 'Plus',
+            icon: 'Finished',
           },
         },
       },
@@ -52,18 +70,26 @@ export default function ({ expose }) {
             await ElMessageBox.confirm(`确定归还此书吗?`)
           },
         },
+        rowClassName: tableRowClassName,
+        stripe: false,
       },
       search: {
         autoSearch: false,
+        //取消自动查询
         validate: true,
-      },
-      actionbar: {
+        //取消初始化查询
+        searchAfterReset: false,
         buttons: {
-          add: {
-            text: '借书',
-            icon: 'Plus',
+          search: {
+            show: false,
+          },
+          reset: {
+            show: false,
           },
         },
+      },
+      actionbar: {
+        buttons: { add: { show: false } },
       },
       columns: {
         // 字段配置
@@ -85,11 +111,12 @@ export default function ({ expose }) {
           search: {
             show: true,
             rules: [
+              { required: true, message: '请输入借书证号' },
               { pattern: /^[0-9]+$/, message: '输入必须为数字' },
               { len: 10, message: '长度需为10位' },
             ],
           },
-          column: { show: false },
+          column: { show: false, columnSetDisabled: true },
           form: { show: false },
         },
         id: {
@@ -104,6 +131,12 @@ export default function ({ expose }) {
           type: 'text',
           addForm: { show: false },
         },
+        pub: {
+          title: '出版社',
+          type: 'text',
+          addForm: { show: false },
+          column: { show: true },
+        },
         borrow_time: {
           title: '借书时间',
           type: 'datetime',
@@ -113,19 +146,13 @@ export default function ({ expose }) {
           title: '出版日期',
           type: 'date',
           addForm: { show: false },
-          column: { show: false },
-        },
-        pub: {
-          title: '出版社',
-          type: 'text',
-          addForm: { show: false },
-          column: { show: false },
+          column: { show: false, columnSetDisabled: true },
         },
         locate: {
           title: '位置',
           type: 'text',
           addForm: { show: false },
-          column: { show: false },
+          column: { show: false, columnSetDisabled: true },
         },
       },
     },

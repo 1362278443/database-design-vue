@@ -9,7 +9,7 @@
           姓名
         </div>
       </template>
-      kooriookami
+      {{ name }}
     </el-descriptions-item>
     <el-descriptions-item>
       <template #label>
@@ -20,7 +20,7 @@
           系别
         </div>
       </template>
-      18100000000
+      {{ dep }}
     </el-descriptions-item>
     <el-descriptions-item>
       <template #label>
@@ -31,44 +31,21 @@
           专业
         </div>
       </template>
-      Suzhou
-    </el-descriptions-item>
-    <el-descriptions-item>
-      <template #label>
-        <div class="cell-item">
-          <el-icon class="icon">
-            <tickets />
-          </el-icon>
-          状态
-        </div>
-      </template>
-      <el-tag size="small">School</el-tag>
-    </el-descriptions-item>
-    <el-descriptions-item>
-      <template #label>
-        <div class="cell-item">
-          <el-icon class="icon">
-            <List />
-          </el-icon>
-          详细
-        </div>
-      </template>
-      No.1188, Wuzhong Avenue, Wuzhong District, Suzhou, Jiangsu Province
+      {{ pro }}
     </el-descriptions-item>
   </el-descriptions>
 </template>
 <script setup lang="ts">
-defineProps({
+const props = defineProps({
   name: String,
   dep: String,
   pro: String,
-  OverExcept: Number,
-  OverExceptList: Array,
 })
 </script>
 <style lang="scss" scoped>
 .el-descriptions {
   margin-top: 20px;
+  max-width: 600px;
 }
 .cell-item {
   font-weight: 700;

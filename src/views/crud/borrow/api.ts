@@ -3,7 +3,7 @@
 // 请求真实后端
 import { request } from '../../../api/service'
 
-const apiPrefix = '/book'
+const apiPrefix = '/borrow'
 
 export function GetList(query: any) {
   return request({
@@ -37,11 +37,11 @@ export function DelObj(id: number) {
   })
 }
 
-export function GetObj(id: number) {
+export function GetObj(sno: number) {
   return request({
-    url: apiPrefix + '/info',
+    url: '/stu' + '/info',
     method: 'get',
-    params: { id },
+    params: { sno },
   })
 }
 

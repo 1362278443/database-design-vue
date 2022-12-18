@@ -5,7 +5,7 @@ const useStore = defineStore('app', {
   state: () => {
     return {
       // 所有这些属性都将自动推断出它们的类型
-      // isCollapse: false, // 侧边栏是否收缩展示
+      isCollapse: true, // 信息是否收缩展示
     }
   },
 })
