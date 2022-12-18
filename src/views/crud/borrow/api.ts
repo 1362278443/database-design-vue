@@ -29,15 +29,15 @@ export function UpdateObj(obj: any) {
   })
 }
 
-export function DelObj(id: number) {
+export function DelObj(SN: number) {
   return request({
     url: apiPrefix + '/delete',
     method: 'post',
-    params: { id },
+    params: { SN },
   })
 }
 
-export function GetObj(sno: number) {
+export function GetObj(sno: string) {
   return request({
     url: '/stu' + '/info',
     method: 'get',
@@ -45,10 +45,10 @@ export function GetObj(sno: number) {
   })
 }
 
-export function BatchDelete(ids: Array<number>) {
+export function BatchDelete(SNs: Array<number>) {
   return request({
     url: apiPrefix + '/batchDelete',
     method: 'post',
-    data: { ids },
+    data: { SNs },
   })
 }

@@ -38,6 +38,8 @@ import { BatchDelete, GetObj } from './api'
 import Schema from 'async-validator'
 import info from './info.vue'
 import { errorCreate } from '@/api/tools'
+import studentStore from '@/store/modules/student'
+import { ElNotification } from 'element-plus'
 
 export default defineComponent({
   components: {
@@ -53,7 +55,9 @@ export default defineComponent({
     // 暴露的方法
     const { crudExpose } = useExpose({ crudRef, crudBinding })
     // 你的crud配置
-    const { crudOptions, selectedIds } = createCrudOptions({ crudExpose })
+    const { crudOptions, selectedIds, selectedtime } = createCrudOptions({
+      crudExpose,
+    })
     // 初始化crud配置
     // eslint-disable-next-line @typescript-eslint/no-unused-vars,no-unused-vars
     const { resetCrudOptions } = useCrud({ crudExpose, crudOptions })
@@ -63,12 +67,54 @@ export default defineComponent({
     //判断是否有查出学生
     const isCollapse = ref(true)
     const stuInfo = ref()
+    const store = studentStore()
 
     const handleBatchDelete = async () => {
       if (selectedIds.value?.length > 0) {
-        await ElMessageBox.confirm(`确定要批量归还这本书吗`, '确认')
+        await ElMessageBox({
+          title: '还书',
+          message: '确定要归这些此书吗',
+          showCancelButton: true,
+          beforeClose: (action, instance, done) => {
+            if (action === 'confirm') {
+              //判断当前书是否超期。并计算费用
+              const now = new Date()
+              const fine = ref(0)
+              selectedtime.value.forEach((element) => {
+                const overTime =
+                  now.getTime() -
+                  element -
+                  1000 * 60 * 60 * 24 * store.limit_day
+                if (overTime > 0) {
+                  fine.value += Math.ceil(overTime / (1000 * 60 * 60 * 24)) * 2
+                }
+              })
+              console.log('需缴费用' + fine.value)
+              if (fine.value > 0) {
+                ElMessageBox.confirm(
+                  '归还这些书需要缴纳费用' + fine.value + '分',
+                  '缴费',
+                  {
+                    confirmButtonText: '点击缴费',
+                    cancelButtonText: '取消',
+                  }
+                ).then((action) => {
+                  if (action === 'confirm') done()
+                })
+              } else {
+                done()
+              }
+            } else {
+              done()
+            }
+          },
+        })
         await BatchDelete(selectedIds.value)
-        ElMessage.success('归还成功')
+        ElNotification({
+          title: '成功',
+          message: '还书成功',
+          type: 'success',
+        })
         selectedIds.value = []
         await crudExpose.doRefresh()
       } else {
@@ -80,7 +126,7 @@ export default defineComponent({
     function openFormWrapper() {
       const search = crudExpose.getSearchRef()
       console.log(crudExpose)
-      if (crudBinding.value.data.length == 0) {
+      if (isCollapse.value) {
         ElMessage.warning('请先输入借书证号！')
         return
       }
@@ -92,7 +138,10 @@ export default defineComponent({
       const now = new Date()
       for (let index = 0; index < crudBinding.value.data.length; index++) {
         const element = crudBinding.value.data[index]
-        if (now.getTime() - element.borrow_time > 1000 * 60 * 60 * 24 * 5) {
+        if (
+          now.getTime() - element.borrow_time >
+          1000 * 60 * 60 * 24 * store.limit_day
+        ) {
           ElMessage.error('请将超期的书归还再借！')
           return
         }
@@ -111,6 +160,7 @@ export default defineComponent({
     }
     const validator = new Schema(descriptor)
 
+    // 查询学生
     function Search() {
       const data = crudExpose.getSearchFormData()
       validator.validate({ sno: data['sno'] }, (errors, fields) => {
@@ -122,7 +172,9 @@ export default defineComponent({
           if (data != null) {
             stuInfo.value = data
             isCollapse.value = false
+            store.limit_day = data.limit_day
             crudExpose.doSearch()
+            crudRef.value.addForm.columns.sno.value = stuInfo.value.sno
           } else {
             isCollapse.value = true
             crudExpose.setTableData([])
