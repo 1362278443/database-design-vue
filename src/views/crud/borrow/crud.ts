@@ -1,11 +1,13 @@
 // crud.js
 import * as api from './api'
 import { ref } from 'vue'
-import studentStore from '@/store/modules/student'
+import { compute, CrudExpose } from '@fast-crud/fast-crud'
+import { errorCreate } from '@/api/tools'
+import Schema from 'async-validator'
 
 // 构建crudOptions的方法
-export default function ({ expose }) {
-  const pageRequest = async (query) => {
+export default function ({ crudExpose }: { crudExpose: CrudExpose }) {
+  const pageRequest = async (query: any) => {
     return await api.GetList(query)
   }
   const editRequest = async ({ form, row }) => {
@@ -15,7 +17,7 @@ export default function ({ expose }) {
   const delRequest = async ({ row }) => {
     return await api.DelObj(row.sn)
   }
-  const addRequest = async ({ form, row }) => {
+  const addRequest = async ({ form }) => {
     return await api.AddObj(form)
   }
   const selectedIds = ref([])
@@ -27,8 +29,19 @@ export default function ({ expose }) {
     selectedtime.value = changed.map((item) => item.borrow_time)
   }
 
-  const store = studentStore()
+  // 信息
+  interface stuInfo {
+    sno: string
+    name: string
+    dep: string
+    pro: string
+    limit_day: number
+  }
 
+  const isCollapse = ref(true)
+  const stu_info = ref<stuInfo>()
+  const is_borrow = ref(true)
+  const book_info = ref()
   interface rowItem {
     id: number
     name: string
@@ -42,18 +55,130 @@ export default function ({ expose }) {
     const now = new Date()
     if (
       now.getTime() - row.borrow_time >
-      1000 * 60 * 60 * 24 * store.limit_day
+      1000 * 60 * 60 * 24 * stu_info.value.limit_day
     ) {
       return 'warning-row'
     }
     return ''
   }
 
+  // 各种方法
+
+  // 查询
+  //定义验证器
+  const descriptor = {
+    sno: [{ required: true }, { pattern: /^[0-9]+$/ }, { len: 10 }],
+  }
+  const validator = new Schema(descriptor)
+  const search = () => {
+    const data = crudExpose.getSearchFormData()
+    validator.validate({ sno: data['sno'] }, (errors, fields) => {
+      if (errors) {
+        return
+      }
+      //获取学生信息
+      api.GetStuInfo(data['sno']).then((data) => {
+        if (data != null) {
+          stu_info.value = data
+          isCollapse.value = false
+          crudExpose.doSearch(crudExpose.getSearchRef())
+        } else {
+          isCollapse.value = true
+          crudExpose.setTableData([])
+          errorCreate('未查询到该学生')
+        }
+      })
+    })
+  }
+
+  //添加按钮
+  const openAdd = (context: any) => {
+    //获取搜索框数据
+
+    if (
+      crudExpose.getSearchFormData().sno == '' ||
+      !crudExpose.getSearchFormData().sno
+    ) {
+      isCollapse.value = true
+      ElMessage.warning('请先输入借书证号！')
+      return
+    }
+    console.log(stu_info.value?.sno)
+    //判断书是否超过借书上限
+    if (crudExpose.crudBinding.value.data.length >= 5) {
+      ElMessage.warning('已超借书上限，请还书后再借！')
+      return
+    }
+    const now = new Date()
+    for (
+      let index = 0;
+      index < crudExpose.crudBinding.value.data.length;
+      index++
+    ) {
+      const element = crudExpose.crudBinding.value.data[index]
+      if (
+        now.getTime() - element.borrow_time >
+        1000 * 60 * 60 * 24 * stu_info.value?.limit_day
+      ) {
+        ElMessage.error('请将超期的书归还再借！')
+        return
+      }
+    }
+    is_borrow.value = true
+    crudExpose.openAdd({})
+  }
+
+  //视图按钮
+  const view = async (context: any) => {
+    is_borrow.value = true
+    await crudExpose.openView({
+      row: context.row,
+      index: context.index,
+    })
+  }
+
   return {
-    selectedIds, //返回给index.vue去使用
+    //返回给index.vue去使用
+    selectedIds,
     selectedtime,
+    isCollapse,
+    stu_info,
+    is_borrow,
+    book_info,
     crudOptions: {
       //请求配置
+      addForm: {
+        rules: {
+          id: {
+            required: true,
+            asyncValidator: (rule: any, value = 0) => {
+              return new Promise<void>((resolve, reject) => {
+                if (value <= 0) {
+                  reject('书的编号必须大于0')
+                } else {
+                  //请求获取后端数据
+                  api
+                    .GetBookInfo(value)
+                    .then((data) => {
+                      book_info.value = data
+                      is_borrow.value = data.is_Borrow
+                      if (data.is_Borrow != false) {
+                        reject('该书已被借走')
+                        return
+                      } else {
+                        resolve()
+                        return
+                      }
+                    })
+                    .catch(() => {
+                      reject('没有该书')
+                    })
+                }
+              })
+            },
+          },
+        },
+      },
       request: {
         pageRequest, // 列表数据请求
         addRequest, // 添加请求
@@ -62,7 +187,7 @@ export default function ({ expose }) {
       },
       rowHandle: {
         buttons: {
-          view: { show: true },
+          view: { show: true, click: view },
           edit: { show: false },
           remove: {
             type: 'primary',
@@ -88,7 +213,7 @@ export default function ({ expose }) {
                   const overTime =
                     now.getTime() -
                     context.row.borrow_time -
-                    1000 * 60 * 60 * 24 * store.limit_day
+                    1000 * 60 * 60 * 24 * stu_info.value.limit_day
                   if (overTime > 0) {
                     //计算费用
                     const fine = Math.ceil(overTime / (1000 * 60 * 60 * 24)) * 2
@@ -114,13 +239,12 @@ export default function ({ expose }) {
           },
           onRemoved: (context) => {
             //模拟缴费
-            console.log('aaaa')
             const now = new Date()
             if (
               now.getTime() - context.row.borrow_time >
               1000 * 60 * 60 * 24 * store.limit_day
             ) {
-              ElMessage.success('我是学生，倒贴50给我')
+              ElMessage.success('我是学生,倒贴50给我')
             }
             ElNotification({
               title: '成功',
@@ -141,15 +265,23 @@ export default function ({ expose }) {
         searchAfterReset: false,
         buttons: {
           search: {
-            show: false,
+            show: true,
+            click: search,
           },
           reset: {
-            show: false,
+            show: true,
           },
         },
       },
       actionbar: {
-        buttons: { add: { show: false } },
+        buttons: {
+          add: {
+            icon: 'Plus',
+            text: '借书',
+            show: true,
+            click: openAdd,
+          },
+        },
       },
       columns: {
         // 字段配置
@@ -187,7 +319,12 @@ export default function ({ expose }) {
             ],
           },
           column: { show: false, columnSetDisabled: true },
-          form: { show: false },
+          form: {
+            show: false,
+            value: compute(() => {
+              return stu_info.value?.sno
+            }),
+          },
         },
         id: {
           title: '图书编号',

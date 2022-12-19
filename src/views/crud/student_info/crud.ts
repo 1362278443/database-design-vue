@@ -3,7 +3,7 @@ import * as api from './api'
 import { dict } from '@fast-crud/fast-crud'
 
 // 构建crudOptions的方法
-export default function ({ expose }) {
+export default function ({ crudExpose }) {
   const pageRequest = async (query) => {
     return await api.GetList(query)
   }

@@ -14,6 +14,7 @@ export function GetList(query: any) {
 }
 
 export function AddObj(obj: any) {
+  console.log(obj)
   return request({
     url: apiPrefix + '/add',
     method: 'post',
@@ -37,11 +38,27 @@ export function DelObj(SN: number) {
   })
 }
 
-export function GetObj(sno: string) {
+export function GetStuInfo(sno: string) {
   return request({
     url: '/stu' + '/info',
     method: 'get',
     params: { sno },
+  })
+}
+
+export function GetBookInfo(id: number) {
+  return request({
+    url: '/book' + '/info',
+    method: 'get',
+    params: { id },
+  })
+}
+
+export function GetObj(id: number) {
+  return request({
+    url: apiPrefix + '/info',
+    method: 'get',
+    params: { id },
   })
 }
 
