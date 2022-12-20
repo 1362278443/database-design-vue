@@ -9,7 +9,7 @@ const commonRoutes: Array<RouteRecordRaw> = [
     path: '/',
     redirect: '/home',
     component: () => import('@/layout/index.vue'),
-    meta: { title: '图书管理系统' },
+    meta: { title: '图书管理系统', icon: 'House' },
     children: [
       {
         name: 'home',
@@ -17,6 +17,7 @@ const commonRoutes: Array<RouteRecordRaw> = [
         component: () => import('@/views/home.vue'),
         meta: {
           title: '首页',
+          icon: 'House',
         },
       },
     ],

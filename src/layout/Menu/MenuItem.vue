@@ -7,7 +7,7 @@
       :hide-timeout="0"
     >
       <template #title>
-        <i :class="menu.meta.icon" v-if="menu.meta.icon"></i>
+        <i :icon="menu.meta.icon" v-if="menu.meta.icon"></i>
         <span>{{ menu.meta.title }}</span>
       </template>
       <menu-item
@@ -25,7 +25,7 @@
         "
       >
         <i
-          :class="menu.children[0].meta.icon || menu.meta.icon"
+          :icon="menu.children[0].meta.icon || menu.meta.icon"
           v-if="menu.children[0].meta.icon || menu.meta.icon"
         ></i>
         <template #title>{{ menu.children[0].meta.title }}</template>
@@ -38,7 +38,7 @@
       >
         <template #title>
           <i
-            :class="menu.children[0].meta.icon || menu.meta.icon"
+            :icon="menu.children[0].meta.icon || menu.meta.icon"
             v-if="menu.children[0].meta.icon || menu.meta.icon"
           ></i>
           <span>{{ menu.children[0].meta.title }}</span>
@@ -53,7 +53,7 @@
     </app-link>
     <app-link v-else :to="pathResolve">
       <el-menu-item :index="pathResolve">
-        <i :class="menu.meta.icon" v-if="menu.meta.icon"></i>
+        <i :icon="menu.meta.icon" v-if="menu.meta.icon"></i>
         <template #title>{{ menu.meta.title }}</template>
       </el-menu-item>
     </app-link>

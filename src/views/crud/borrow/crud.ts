@@ -94,7 +94,6 @@ export default function ({ crudExpose }: { crudExpose: CrudExpose }) {
   //添加按钮
   const openAdd = (context: any) => {
     //获取搜索框数据
-
     if (
       crudExpose.getSearchFormData().sno == '' ||
       !crudExpose.getSearchFormData().sno
@@ -330,7 +329,7 @@ export default function ({ crudExpose }: { crudExpose: CrudExpose }) {
           title: '图书编号',
           key: 'id',
           type: 'number',
-          column: { width: 80 },
+          column: { width: 110 },
           form: { show: true },
         },
         name: {

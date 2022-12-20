@@ -1,9 +1,9 @@
 // crud.js
 import * as api from './api'
-import { dict } from '@fast-crud/fast-crud'
+import { CrudExpose } from '@fast-crud/fast-crud'
 
 // 构建crudOptions的方法
-export default function ({ expose }) {
+export default function ({ crudExpose }: { crudExpose: CrudExpose }) {
   const pageRequest = async (query) => {
     return await api.GetList(query)
   }
@@ -17,6 +17,7 @@ export default function ({ expose }) {
   const addRequest = async ({ form }) => {
     return await api.AddObj(form)
   }
+
   return {
     crudOptions: {
       //请求配置
@@ -26,25 +27,71 @@ export default function ({ expose }) {
         editRequest, // 修改请求
         delRequest, // 删除请求
       },
+      table: {
+        rowKey: 'SN', //设置你的主键id， 默认rowKey=id
+      },
+      actionbar: {
+        show: false,
+      },
       columns: {
         // 字段配置
-        radio: {
-          title: '状态', //字段名称
-          search: { show: true }, // 搜索配置
-          type: 'dict-radio', // 字段类型
-          dict: dict({
-            //数据字典配置
-            url: '/dicts/OpenStatusEnum',
-          }),
-        },
-        text: {
-          title: '测试',
+        // 选择列
+        SN: {
+          title: '编号',
+          key: 'SN',
+          type: 'number',
           search: { show: true },
-          type: 'text',
+          column: {
+            width: 80,
+            sortable: 'custom',
+          },
+          form: {
+            show: false,
+          },
         },
-        // 你可以尝试在此处增加更多字段
+        name: {
+          title: '书名',
+          type: 'text',
+          search: { show: true },
+          form: {
+            rules: [{ required: true }],
+          },
+        },
+        time: {
+          title: '出版日期',
+          type: 'date',
+          search: {
+            show: true,
+            component: {
+              name: 'el-date-picker',
+              type: 'year',
+              'value-format': 'YYYY',
+            },
+          },
+          form: {
+            rules: [{ required: true }],
+          },
+          column: {
+            sortable: 'custom',
+          },
+        },
+        pub: {
+          title: '出版社',
+          type: 'text',
+          search: { show: true },
+          form: {
+            rules: [{ required: true }],
+          },
+        },
+        locate: {
+          title: '位置',
+          type: 'text',
+          search: { show: true },
+          form: {
+            rules: [{ required: true }],
+          },
+        },
       },
-      // 其他crud配置
     },
   }
 }
