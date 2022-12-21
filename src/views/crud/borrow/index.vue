@@ -44,7 +44,7 @@ export default defineComponent({
     studentInfo,
     bookInfo,
   },
-  name: 'book', // 实际开发中可以修改一下name
+  name: 'borrow', // 实际开发中可以修改一下name
   setup() {
     // crud组件的ref
     const crudRef = ref()

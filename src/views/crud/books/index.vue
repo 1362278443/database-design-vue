@@ -17,7 +17,7 @@ import { useExpose, useCrud } from '@fast-crud/fast-crud'
 import { BatchDelete } from './api'
 
 export default defineComponent({
-  name: 'book', // 实际开发中可以修改一下name
+  name: 'books',
   setup() {
     // crud组件的ref
     const crudRef = ref()

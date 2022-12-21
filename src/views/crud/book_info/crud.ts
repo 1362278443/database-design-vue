@@ -79,12 +79,7 @@ export default function ({ crudExpose }: { crudExpose: CrudExpose }) {
           type: 'text',
           search: { show: true },
         },
-        locate: {
-          title: '位置',
-          type: 'text',
-          search: { show: true },
-        },
-        borrow_times: {
+        allBorrow: {
           title: '累计借出量',
           type: 'nubmer',
           search: { show: false },
@@ -92,12 +87,16 @@ export default function ({ crudExpose }: { crudExpose: CrudExpose }) {
             sortable: 'custom',
           },
         },
-        borrow_info: {
+        inventory: {
           title: '借出情况',
+          type: 'number',
           search: { show: false },
-          component: {
-            name: 'el-progress',
-          },
+        },
+        nowBorrow: {
+          title: '借出量',
+          type: 'number',
+          column: { show: false },
+          search: { show: false },
         },
       },
     },

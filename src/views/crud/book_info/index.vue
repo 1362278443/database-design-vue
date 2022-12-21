@@ -1,6 +1,16 @@
 <template>
   <fs-page class="page-layout-card">
-    <fs-crud ref="crudRef" v-bind="crudBinding"> </fs-crud>
+    <fs-crud ref="crudRef" v-bind="crudBinding">
+      <template #cell_inventory="scope">
+        <el-progress
+          :percentage="(scope.row.nowBorrow / scope.row.inventory) * 100"
+          :stroke-width="10"
+          :color="colors"
+        >
+          <span>{{ scope.row.nowBorrow }}/{{ scope.row.inventory }}</span>
+        </el-progress>
+      </template>
+    </fs-crud>
   </fs-page>
 </template>
 
@@ -10,7 +20,7 @@ import createCrudOptions from './crud'
 import { useExpose, useCrud } from '@fast-crud/fast-crud'
 
 export default defineComponent({
-  name: 'book', // 实际开发中可以修改一下name
+  name: 'book_info',
   setup() {
     // crud组件的ref
     const crudRef = ref()
@@ -30,7 +40,14 @@ export default defineComponent({
       crudExpose.doRefresh()
     })
 
+    const colors = [
+      { color: '#67C23A', percentage: 60 },
+      { color: '#E6A23C', percentage: 80 },
+      { color: '#F56C6C', percentage: 100 },
+    ]
+
     return {
+      colors,
       crudBinding,
       crudRef,
     }
