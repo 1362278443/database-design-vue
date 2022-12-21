@@ -1,6 +1,6 @@
 // crud.js
 import * as api from './api'
-import { CrudExpose } from '@fast-crud/fast-crud'
+import { CrudExpose, compute } from '@fast-crud/fast-crud'
 
 // 构建crudOptions的方法
 export default function ({ crudExpose }: { crudExpose: CrudExpose }) {
@@ -17,6 +17,12 @@ export default function ({ crudExpose }: { crudExpose: CrudExpose }) {
   const addRequest = async ({ form }) => {
     return await api.AddObj(form)
   }
+
+  const colors = [
+    { color: '#67C23A', percentage: 60 },
+    { color: '#E6A23C', percentage: 80 },
+    { color: '#F56C6C', percentage: 100 },
+  ]
 
   return {
     crudOptions: {
@@ -91,12 +97,28 @@ export default function ({ crudExpose }: { crudExpose: CrudExpose }) {
           title: '借出情况',
           type: 'number',
           search: { show: false },
+          viewForm: {
+            component: {
+              name: 'el-progress',
+              strokeWidth: 10,
+              color: colors,
+              percentage: compute((context: any) => {
+                return (context.row.nowBorrow / context.row.inventory) * 100
+              }),
+              slots: {
+                default(context: any) {
+                  return context.row.nowBorrow + '/' + context.row.inventory
+                },
+              },
+            },
+          },
         },
         nowBorrow: {
           title: '借出量',
           type: 'number',
           column: { show: false },
           search: { show: false },
+          form: { show: false },
         },
       },
     },

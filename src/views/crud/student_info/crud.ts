@@ -1,8 +1,9 @@
 // crud.js
 import * as api from './api'
+import { CrudExpose, compute } from '@fast-crud/fast-crud'
 
 // 构建crudOptions的方法
-export default function ({ crudExpose }) {
+export default function ({ crudExpose }: { crudExpose: CrudExpose }) {
   const pageRequest = async (query) => {
     return await api.GetList(query)
   }
@@ -16,6 +17,11 @@ export default function ({ crudExpose }) {
   const addRequest = async ({ form }) => {
     return await api.AddObj(form)
   }
+  const colors = [
+    { color: '#67C23A', percentage: 60 },
+    { color: '#E6A23C', percentage: 80 },
+    { color: '#F56C6C', percentage: 100 },
+  ]
 
   return {
     crudOptions: {
@@ -60,28 +66,6 @@ export default function ({ crudExpose }) {
           search: {
             show: true,
           },
-          addForm: {
-            rules: [
-              { required: true },
-              { pattern: /^[0-9]+$/, message: '输入必须为数字' },
-              { len: 10, message: '长度需为10位' },
-              {
-                //向后端请求判断是否有该学生
-                async validator(rule: any, value: any, callback: any) {
-                  const errors = []
-                  const res = await api.GetObj(value)
-                  if (res != null) {
-                    callback(new Error('借书证号重复'))
-                  }
-                  callback()
-                },
-                message: '借书证号重复',
-              },
-            ],
-          },
-          editForm: {
-            show: false,
-          },
           column: {
             sortable: 'custom',
           },
@@ -90,27 +74,18 @@ export default function ({ crudExpose }) {
           title: '姓名',
           type: 'text',
           search: { show: true },
-          form: {
-            rules: [{ required: true }],
-          },
         },
         dep: {
           title: '系别',
           type: 'text',
           search: { show: true },
-          form: {
-            rules: [{ required: true }],
-          },
         },
         pro: {
           title: '专业',
           type: 'text',
           search: { show: true },
-          form: {
-            rules: [{ required: true }],
-          },
         },
-        borrow_times: {
+        sumnum: {
           title: '累计借书量',
           type: 'nubmer',
           search: { show: false },
@@ -118,11 +93,24 @@ export default function ({ crudExpose }) {
             sortable: 'custom',
           },
         },
-        borrow_info: {
+        num: {
           title: '借书情况',
+          type: 'nubmer',
           search: { show: false },
-          component: {
-            name: 'el-progress',
+          viewForm: {
+            component: {
+              name: 'el-progress',
+              strokeWidth: 10,
+              color: colors,
+              percentage: compute((context: any) => {
+                return (context.row.num / 5) * 100
+              }),
+              slots: {
+                default(context: any) {
+                  return context.row.num + '/5'
+                },
+              },
+            },
           },
         },
       },

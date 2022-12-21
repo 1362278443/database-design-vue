@@ -1,13 +1,13 @@
 <template>
   <fs-page class="page-layout-card">
     <fs-crud ref="crudRef" v-bind="crudBinding">
-      <template #cell_inventory="scope">
+      <template #cell_num="scope">
         <el-progress
-          :percentage="(scope.row.nowBorrow / scope.row.inventory) * 100"
+          :percentage="(scope.row.num / 5) * 100"
           :stroke-width="10"
           :color="colors"
         >
-          <span>{{ scope.row.nowBorrow }}/{{ scope.row.inventory }}</span>
+          <span>{{ scope.row.num }}/5</span>
         </el-progress>
       </template>
     </fs-crud>
