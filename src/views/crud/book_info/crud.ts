@@ -28,34 +28,36 @@ export default function ({ crudExpose }: { crudExpose: CrudExpose }) {
         delRequest, // 删除请求
       },
       table: {
-        rowKey: 'SN', //设置你的主键id， 默认rowKey=id
+        rowKey: 'id', //设置你的主键id， 默认rowKey=id
       },
       actionbar: {
-        show: false,
+        buttons: {
+          add: {
+            show: false,
+          },
+        },
+      },
+      rowHandle: {
+        buttons: {
+          view: {
+            show: true,
+          },
+          edit: {
+            show: false,
+          },
+          remove: {
+            show: false,
+          },
+        },
+        width: 80,
       },
       columns: {
         // 字段配置
         // 选择列
-        SN: {
-          title: '编号',
-          key: 'SN',
-          type: 'number',
-          search: { show: true },
-          column: {
-            width: 80,
-            sortable: 'custom',
-          },
-          form: {
-            show: false,
-          },
-        },
         name: {
           title: '书名',
           type: 'text',
           search: { show: true },
-          form: {
-            rules: [{ required: true }],
-          },
         },
         time: {
           title: '出版日期',
@@ -68,9 +70,6 @@ export default function ({ crudExpose }: { crudExpose: CrudExpose }) {
               'value-format': 'YYYY',
             },
           },
-          form: {
-            rules: [{ required: true }],
-          },
           column: {
             sortable: 'custom',
           },
@@ -79,16 +78,25 @@ export default function ({ crudExpose }: { crudExpose: CrudExpose }) {
           title: '出版社',
           type: 'text',
           search: { show: true },
-          form: {
-            rules: [{ required: true }],
-          },
         },
         locate: {
           title: '位置',
           type: 'text',
           search: { show: true },
-          form: {
-            rules: [{ required: true }],
+        },
+        borrow_times: {
+          title: '累计借出量',
+          type: 'nubmer',
+          search: { show: false },
+          column: {
+            sortable: 'custom',
+          },
+        },
+        borrow_info: {
+          title: '借出情况',
+          search: { show: false },
+          component: {
+            name: 'el-progress',
           },
         },
       },

@@ -1,6 +1,6 @@
 import { request } from '../../../api/service'
 
-const apiPrefix = '/log'
+const apiPrefix = '/info/book'
 
 export function GetList(query: any) {
   return request({

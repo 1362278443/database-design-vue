@@ -36,7 +36,7 @@ import Header from './Header/index.vue'
   overflow-x: hidden;
   .header-logo {
     width: 100%;
-    height: 60px;
+    height: 64px;
     display: flex;
     justify-items: center;
     align-items: center;

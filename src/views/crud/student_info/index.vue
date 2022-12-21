@@ -1,16 +1,16 @@
 <template>
-  <fs-page>
-    <fs-crud ref="crudRef" v-bind="crudBinding" />
+  <fs-page class="page-layout-card">
+    <fs-crud ref="crudRef" v-bind="crudBinding"> </fs-crud>
   </fs-page>
 </template>
 
-<script>
+<script lang="ts">
 import { defineComponent, ref, onMounted } from 'vue'
 import createCrudOptions from './crud'
 import { useExpose, useCrud } from '@fast-crud/fast-crud'
 
 export default defineComponent({
-  name: 'MyFirstCrud', // 实际开发中可以修改一下name
+  name: 'book', // 实际开发中可以修改一下name
   setup() {
     // crud组件的ref
     const crudRef = ref()
@@ -29,6 +29,7 @@ export default defineComponent({
     onMounted(() => {
       crudExpose.doRefresh()
     })
+
     return {
       crudBinding,
       crudRef,
@@ -36,3 +37,9 @@ export default defineComponent({
   },
 })
 </script>
+
+<style lang="scss">
+.page-layout-card {
+  background-color: var(--system-menu-background);
+}
+</style>

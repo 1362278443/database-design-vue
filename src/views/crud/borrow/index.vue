@@ -138,6 +138,6 @@ export default defineComponent({
 
 <style lang="scss">
 .page-layout-card {
-  background-color: #eee;
+  background-color: var(--system-menu-background);
 }
 </style>

@@ -6,11 +6,14 @@ import 'element-plus/dist/index.css'
 import router from '@/router/index'
 import store from './store'
 import plugin from './plugin'
+import 'echarts'
+import VueECharts from 'vue-echarts'
 
 import App from './App.vue'
 
 const app = createApp(App)
 
+app.component('v-chart', VueECharts)
 app.use(ElementPlus, { size: 'default', zIndex: 3000, locale: zhCn })
 app.use(router)
 app.use(store)
